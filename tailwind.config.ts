@@ -70,6 +70,10 @@ export default {
 					health: 'hsl(var(--category-health))',
 					other: 'hsl(var(--category-other))'
 				},
+				'stat-today': 'hsl(var(--stat-today))',
+				'stat-week': 'hsl(var(--stat-week))',
+				'stat-month': 'hsl(var(--stat-month))',
+				'stat-total': 'hsl(var(--stat-total))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

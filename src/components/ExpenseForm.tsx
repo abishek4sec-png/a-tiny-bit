@@ -53,18 +53,21 @@ export const ExpenseForm = ({ onAddExpense }: ExpenseFormProps) => {
   };
 
   return (
-    <Card className="expense-card p-6">
-      <div className="flex items-center gap-2 mb-6">
-        <div className="p-2 rounded-lg bg-primary/10">
-          <Plus className="h-5 w-5 text-primary" />
+    <Card className="expense-card p-6 hover:shadow-lg transition-all duration-300">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-primary-glow">
+          <Plus className="h-6 w-6 text-primary-foreground" />
         </div>
-        <h2 className="text-xl font-semibold">Add New Expense</h2>
+        <div>
+          <h2 className="text-xl font-bold">Add New Expense</h2>
+          <p className="text-sm text-muted-foreground">💸 What did you buy today?</p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
+            <Label htmlFor="amount" className="text-sm font-medium">💵 Amount</Label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -75,62 +78,74 @@ export const ExpenseForm = ({ onAddExpense }: ExpenseFormProps) => {
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-11 border-2 hover:border-primary/50 focus:border-primary transition-colors"
                 required
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="date">Date</Label>
+            <Label htmlFor="date" className="text-sm font-medium">📅 Date</Label>
             <Input
               id="date"
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              className="h-11 border-2 hover:border-primary/50 focus:border-primary transition-colors"
               required
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="category">Category</Label>
-          <Select value={category} onValueChange={(value: ExpenseCategory) => setCategory(value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {EXPENSE_CATEGORIES.map((cat) => (
-                <SelectItem key={cat.value} value={cat.value}>
-                  <div className="flex items-center gap-2">
-                    <span>{cat.icon}</span>
-                    <span>{cat.label}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="space-y-3">
+          <Label htmlFor="category" className="text-sm font-medium">🏷️ Category</Label>
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+            {EXPENSE_CATEGORIES.map((cat) => (
+              <button
+                key={cat.value}
+                type="button"
+                onClick={() => setCategory(cat.value)}
+                className={`p-3 rounded-xl border-2 transition-all duration-200 hover:scale-105 ${
+                  category === cat.value 
+                    ? 'border-primary bg-primary/10 shadow-md' 
+                    : 'border-border hover:border-primary/50 bg-background'
+                }`}
+              >
+                <div className="text-2xl mb-1">{cat.icon}</div>
+                <div className="text-xs font-medium">{cat.label}</div>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description" className="text-sm font-medium">📝 Description</Label>
           <Textarea
             id="description"
-            placeholder="What did you spend on?"
+            placeholder="What did you spend on? (e.g., Coffee at Starbucks)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="min-h-[80px]"
+            className="min-h-[70px] border-2 hover:border-primary/50 focus:border-primary transition-colors"
             required
           />
         </div>
 
         <Button 
           type="submit" 
-          className="w-full" 
-          variant="gradient"
+          className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200" 
           disabled={isSubmitting || !amount || !description.trim()}
         >
-          {isSubmitting ? 'Adding...' : 'Add Expense'}
+          {isSubmitting ? (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              Adding...
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              Add Expense
+            </div>
+          )}
         </Button>
       </form>
     </Card>

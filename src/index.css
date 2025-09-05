@@ -41,6 +41,12 @@
     --success-foreground: 220 30% 98%;
     --warning: 38 85% 55%;
     --warning-foreground: 220 30% 98%;
+    
+    /* Stat card accent colors */
+    --stat-today: 142 70% 50%;
+    --stat-week: 210 75% 55%;
+    --stat-month: 38 85% 55%;
+    --stat-total: 300 70% 60%;
 
     /* Form elements */
     --border: 220 15% 88%;
@@ -119,6 +125,12 @@
     --success-foreground: 220 25% 10%;
     --warning: 38 85% 65%;
     --warning-foreground: 220 25% 10%;
+    
+    /* Dark mode stat card accent colors */
+    --stat-today: 142 70% 55%;
+    --stat-week: 210 75% 60%;
+    --stat-month: 38 85% 60%;
+    --stat-total: 300 70% 65%;
 
     --border: 220 15% 18%;
     --input: 220 15% 15%;

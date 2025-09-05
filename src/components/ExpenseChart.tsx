@@ -69,12 +69,21 @@ export const ExpenseChart = ({ summary }: ExpenseChartProps) => {
   };
 
   return (
-    <Card className="expense-card p-6">
-      <div className="flex items-center gap-2 mb-6">
-        <div className="p-2 rounded-lg bg-success/10">
-          <BarChart3 className="h-5 w-5 text-success" />
+    <Card className="expense-card p-6 hover:shadow-lg transition-all duration-300">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-success to-success/80">
+            <BarChart3 className="h-6 w-6 text-success-foreground" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold">Spending by Category</h2>
+            <p className="text-sm text-muted-foreground">📊 Your money breakdown</p>
+          </div>
         </div>
-        <h2 className="text-xl font-semibold">Spending by Category</h2>
+        <div className="text-center">
+          <div className="text-2xl font-bold text-primary">${summary.totalAll.toFixed(2)}</div>
+          <div className="text-xs text-muted-foreground">Total</div>
+        </div>
       </div>
 
       <div className="h-[400px]">
@@ -84,9 +93,9 @@ export const ExpenseChart = ({ summary }: ExpenseChartProps) => {
               data={chartData}
               cx="50%"
               cy="50%"
-              innerRadius={60}
-              outerRadius={120}
-              paddingAngle={2}
+              innerRadius={70}
+              outerRadius={130}
+              paddingAngle={3}
               dataKey="value"
             >
               {chartData.map((entry, index) => (

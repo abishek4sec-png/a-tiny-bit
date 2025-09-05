@@ -24,17 +24,22 @@ const Index = () => {
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-3">
-            <div className="p-3 rounded-xl bg-gradient-to-r from-primary to-primary-glow">
-              <Wallet className="h-8 w-8 text-primary-foreground" />
+        <div className="text-center space-y-6 mb-4">
+          <div className="flex items-center justify-center gap-4">
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-primary via-primary-glow to-accent shadow-lg">
+              <Wallet className="h-10 w-10 text-primary-foreground" />
             </div>
-            <h1 className="text-4xl font-bold gradient-text">
-              Expense Tracker
-            </h1>
+            <div>
+              <h1 className="text-5xl font-black gradient-text">
+                Expense Tracker
+              </h1>
+              <div className="text-lg text-muted-foreground font-medium">
+                💰 Your friendly money buddy
+              </div>
+            </div>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Track your daily expenses, visualize spending patterns, and take control of your finances
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Track your daily expenses, visualize spending patterns, and take control of your finances with style ✨
           </p>
         </div>
 

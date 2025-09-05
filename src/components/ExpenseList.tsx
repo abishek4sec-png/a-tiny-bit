@@ -46,15 +46,18 @@ export const ExpenseList = ({ expenses, onDeleteExpense }: ExpenseListProps) => 
   }
 
   return (
-    <Card className="expense-card p-6">
+    <Card className="expense-card p-6 hover:shadow-lg transition-all duration-300">
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-accent/10">
-            <Receipt className="h-5 w-5 text-accent" />
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-accent to-accent/80">
+            <Receipt className="h-6 w-6 text-accent-foreground" />
           </div>
-          <h2 className="text-xl font-semibold">Recent Expenses</h2>
+          <div>
+            <h2 className="text-xl font-bold">Recent Expenses</h2>
+            <p className="text-sm text-muted-foreground">💳 Your spending history</p>
+          </div>
         </div>
-        <Badge variant="secondary">{expenses.length} total</Badge>
+        <Badge variant="secondary" className="px-3 py-1 font-semibold">{expenses.length} total</Badge>
       </div>
 
       {/* Filters */}
@@ -100,18 +103,20 @@ export const ExpenseList = ({ expenses, onDeleteExpense }: ExpenseListProps) => 
           return (
             <div
               key={expense.id}
-              className="flex items-center justify-between p-4 rounded-lg border bg-card/50 hover:bg-card transition-colors group"
+              className="flex items-center justify-between p-3 rounded-xl border bg-card/50 hover:bg-card hover:shadow-md transition-all duration-200 group hover:scale-[1.01]"
             >
-              <div className="flex items-center gap-4 flex-1">
-                <div className="flex items-center gap-3">
-                  <div className="text-2xl">{categoryInfo?.icon}</div>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{expense.description}</span>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-3 flex-1">
+                <div className="text-2xl p-2 rounded-lg bg-muted/50">{categoryInfo?.icon}</div>
+                <div className="flex flex-col min-w-0 flex-1">
+                  <span className="font-semibold truncate">{expense.description}</span>
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1">
                       <Tag className="h-3 w-3" />
                       <span>{categoryInfo?.label}</span>
-                      <Calendar className="h-3 w-3 ml-2" />
-                      <span>{format(new Date(expense.date), 'MMM dd, yyyy')}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      <span>{format(new Date(expense.date), 'MMM dd')}</span>
                     </div>
                   </div>
                 </div>
@@ -119,7 +124,7 @@ export const ExpenseList = ({ expenses, onDeleteExpense }: ExpenseListProps) => 
 
               <div className="flex items-center gap-3">
                 <div className="text-right">
-                  <div className="text-lg font-semibold">
+                  <div className="text-lg font-bold text-primary">
                     ${expense.amount.toFixed(2)}
                   </div>
                 </div>
@@ -128,7 +133,7 @@ export const ExpenseList = ({ expenses, onDeleteExpense }: ExpenseListProps) => 
                   variant="ghost"
                   size="icon"
                   onClick={() => onDeleteExpense(expense.id)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
+                  className="opacity-0 group-hover:opacity-100 transition-all duration-200 text-destructive hover:text-destructive hover:bg-destructive/10 hover:scale-110"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       port: 5000,
     },
+    allowedHosts: true,
   },
   plugins: [
     react(),

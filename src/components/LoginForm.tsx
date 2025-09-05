@@ -21,8 +21,11 @@ export default function LoginForm({ onLogin, isSignUp, onToggleMode }: LoginForm
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
       
+      console.log('Making API request to:', supabaseUrl);
+      console.log('Using native fetch, not Supabase client');
+      
       if (isSignUp) {
-        // Sign up - insert new user using direct API call
+        // Sign up - insert new user using direct API call (v2)
         const response = await fetch(`${supabaseUrl}/rest/v1/users`, {
           method: 'POST',
           headers: {

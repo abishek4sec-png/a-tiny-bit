@@ -1,15 +1,16 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import { User, AuthError } from '@supabase/supabase-js';
+import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import type { Tables } from '@/integrations/supabase/types';
 import { toast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   user: User | null;
+  session: Session | null;
   profile: UserProfile | null;
   loading: boolean;
-  signIn: (username: string, password: string) => Promise<{ error: AuthError | null }>;
-  signUp: (username: string, password: string) => Promise<{ error: AuthError | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signUp: (email: string, password: string, username?: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -27,31 +28,22 @@ export const useAuth = () => {
 
 export const useAuthProvider = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        await fetchUserProfile(session.user.id);
-      }
-      
-      setLoading(false);
-    };
-
-    getInitialSession();
-
-    // Listen for auth changes
+    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
+        setSession(session);
         setUser(session?.user ?? null);
         
+        // Defer profile fetching to avoid deadlock
         if (session?.user) {
-          await fetchUserProfile(session.user.id);
+          setTimeout(() => {
+            fetchUserProfile(session.user.id);
+          }, 0);
         } else {
           setProfile(null);
         }
@@ -59,6 +51,20 @@ export const useAuthProvider = () => {
         setLoading(false);
       }
     );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        setTimeout(() => {
+          fetchUserProfile(session.user.id);
+        }, 0);
+      }
+      
+      setLoading(false);
+    });
 
     return () => subscription.unsubscribe();
   }, []);
@@ -69,9 +75,9 @@ export const useAuthProvider = () => {
         .from('user_profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         console.error('Error fetching user profile:', error);
         return;
       }
@@ -82,31 +88,12 @@ export const useAuthProvider = () => {
     }
   };
 
-  const signIn = async (username: string, password: string) => {
+  const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
       
-      // First, get the user's email from their username
-      const { data: profileData, error: profileError } = await supabase
-        .from('user_profiles')
-        .select('id')
-        .eq('username', username)
-        .single();
-
-      if (profileError || !profileData) {
-        return { error: { message: 'Username not found' } as AuthError };
-      }
-
-      // Get the user's email from auth.users
-      const { data: userData, error: userError } = await supabase.auth.admin.getUserById(profileData.id);
-      
-      if (userError || !userData.user?.email) {
-        return { error: { message: 'User not found' } as AuthError };
-      }
-
-      // Sign in with email and password
       const { error } = await supabase.auth.signInWithPassword({
-        email: userData.user.email,
+        email,
         password,
       });
 
@@ -121,7 +108,7 @@ export const useAuthProvider = () => {
 
       toast({
         title: "Welcome back!",
-        description: `Signed in as ${username}`,
+        description: "You've been successfully signed in.",
       });
 
       return { error: null };
@@ -138,36 +125,17 @@ export const useAuthProvider = () => {
     }
   };
 
-  const signUp = async (username: string, password: string) => {
+  const signUp = async (email: string, password: string, username?: string) => {
     try {
       setLoading(true);
-
-      // Check if username already exists
-      const { data: existingUser } = await supabase
-        .from('user_profiles')
-        .select('username')
-        .eq('username', username)
-        .single();
-
-      if (existingUser) {
-        const error = { message: 'Username already exists' } as AuthError;
-        toast({
-          title: "Sign up failed",
-          description: error.message,
-          variant: "destructive"
-        });
-        return { error };
-      }
-
-      // Create a temporary email using username
-      const email = `${username}@temp.local`;
 
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
-            username: username,
+            username: username || email.split('@')[0]
           }
         }
       });
@@ -183,7 +151,7 @@ export const useAuthProvider = () => {
 
       toast({
         title: "Account created!",
-        description: `Welcome ${username}! You can now start tracking your expenses.`,
+        description: "Please check your email to verify your account.",
       });
 
       return { error: null };
@@ -218,6 +186,7 @@ export const useAuthProvider = () => {
 
   return {
     user,
+    session,
     profile,
     loading,
     signIn,

@@ -1,4 +1,4 @@
-import { useExpenses } from '@/hooks/useExpenses';
+import { useSupabaseExpenses } from '@/hooks/useSupabaseExpenses';
 import { ExpenseForm } from '@/components/ExpenseForm';
 import { ExpenseList } from '@/components/ExpenseList';
 import { ExpenseSummary } from '@/components/ExpenseSummary';
@@ -6,7 +6,7 @@ import { ExpenseChart } from '@/components/ExpenseChart';
 import { Wallet, TrendingDown } from 'lucide-react';
 
 const Index = () => {
-  const { expenses, loading, addExpense, deleteExpense, getSummary } = useExpenses();
+  const { expenses, loading, addExpense, deleteExpense, getSummary } = useSupabaseExpenses();
   const summary = getSummary();
 
   if (loading) {

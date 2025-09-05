@@ -8,6 +8,7 @@ import { toast } from '@/hooks/use-toast';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
@@ -21,6 +22,12 @@ export default function LoginForm() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: {
+              username: username
+            }
+          }
         });
         
         if (error) throw error;
@@ -77,6 +84,17 @@ export default function LoginForm() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {isSignUp && (
+              <div className="space-y-2">
+                <Input
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </div>
+            )}
             <div className="space-y-2">
               <Input
                 type="email"

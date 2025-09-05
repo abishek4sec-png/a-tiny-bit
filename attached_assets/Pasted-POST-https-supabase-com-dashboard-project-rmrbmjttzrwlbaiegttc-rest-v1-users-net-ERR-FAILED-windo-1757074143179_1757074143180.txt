@@ -1,0 +1,77 @@
+POST https://supabase.com/dashboard/project/rmrbmjttzrwlbaiegttc/rest/v1/users net::ERR_FAILED
+window.fetch @ Network.js:219
+apply @ injected.js:253
+handleSubmit @ LoginForm.tsx:29
+callCallback2 @ chunk-W6L2VRDA.js?v=ef3a0cfb:3674
+invokeGuardedCallbackDev @ chunk-W6L2VRDA.js?v=ef3a0cfb:3699
+invokeGuardedCallback @ chunk-W6L2VRDA.js?v=ef3a0cfb:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-W6L2VRDA.js?v=ef3a0cfb:3736
+executeDispatch @ chunk-W6L2VRDA.js?v=ef3a0cfb:7014
+processDispatchQueueItemsInOrder @ chunk-W6L2VRDA.js?v=ef3a0cfb:7034
+processDispatchQueue @ chunk-W6L2VRDA.js?v=ef3a0cfb:7043
+dispatchEventsForPlugins @ chunk-W6L2VRDA.js?v=ef3a0cfb:7051
+(anonymous) @ chunk-W6L2VRDA.js?v=ef3a0cfb:7174
+batchedUpdates$1 @ chunk-W6L2VRDA.js?v=ef3a0cfb:18913
+batchedUpdates @ chunk-W6L2VRDA.js?v=ef3a0cfb:3579
+dispatchEventForPluginEventSystem @ chunk-W6L2VRDA.js?v=ef3a0cfb:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-W6L2VRDA.js?v=ef3a0cfb:5478
+dispatchEvent @ chunk-W6L2VRDA.js?v=ef3a0cfb:5472
+dispatchDiscreteEvent @ chunk-W6L2VRDA.js?v=ef3a0cfb:5449Understand this error
+Console.js:61 Unexpected error: TypeError: Failed to fetch
+    at window.fetch (Network.js:219:37)
+    at Object.apply (injected.js:253:39)
+    at handleSubmit (LoginForm.tsx:29:32)
+    at HTMLUnknownElement.callCallback2 (chunk-W6L2VRDA.js?v=ef3a0cfb:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-W6L2VRDA.js?v=ef3a0cfb:3699:24)
+    at invokeGuardedCallback (chunk-W6L2VRDA.js?v=ef3a0cfb:3733:39)
+    at invokeGuardedCallbackAndCatchFirstError (chunk-W6L2VRDA.js?v=ef3a0cfb:3736:33)
+    at executeDispatch (chunk-W6L2VRDA.js?v=ef3a0cfb:7014:11)
+    at processDispatchQueueItemsInOrder (chunk-W6L2VRDA.js?v=ef3a0cfb:7034:15)
+    at processDispatchQueue (chunk-W6L2VRDA.js?v=ef3a0cfb:7043:13)
+Mt.forEach.n.<computed> @ Console.js:61
+handleSubmit @ LoginForm.tsx:80
+await in handleSubmit
+callCallback2 @ chunk-W6L2VRDA.js?v=ef3a0cfb:3674
+invokeGuardedCallbackDev @ chunk-W6L2VRDA.js?v=ef3a0cfb:3699
+invokeGuardedCallback @ chunk-W6L2VRDA.js?v=ef3a0cfb:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-W6L2VRDA.js?v=ef3a0cfb:3736
+executeDispatch @ chunk-W6L2VRDA.js?v=ef3a0cfb:7014
+processDispatchQueueItemsInOrder @ chunk-W6L2VRDA.js?v=ef3a0cfb:7034
+processDispatchQueue @ chunk-W6L2VRDA.js?v=ef3a0cfb:7043
+dispatchEventsForPlugins @ chunk-W6L2VRDA.js?v=ef3a0cfb:7051
+(anonymous) @ chunk-W6L2VRDA.js?v=ef3a0cfb:7174
+batchedUpdates$1 @ chunk-W6L2VRDA.js?v=ef3a0cfb:18913
+batchedUpdates @ chunk-W6L2VRDA.js?v=ef3a0cfb:3579
+dispatchEventForPluginEventSystem @ chunk-W6L2VRDA.js?v=ef3a0cfb:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-W6L2VRDA.js?v=ef3a0cfb:5478
+dispatchEvent @ chunk-W6L2VRDA.js?v=ef3a0cfb:5472
+dispatchDiscreteEvent @ chunk-W6L2VRDA.js?v=ef3a0cfb:5449Understand this error
+Network.js:219   Uncaught (in promise) TypeError: Failed to fetch
+    at window.fetch (Network.js:219:37)
+    at Object.apply (injected.js:253:39)
+    at handleSubmit (LoginForm.tsx:29:32)
+    at HTMLUnknownElement.callCallback2 (chunk-W6L2VRDA.js?v=ef3a0cfb:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-W6L2VRDA.js?v=ef3a0cfb:3699:24)
+    at invokeGuardedCallback (chunk-W6L2VRDA.js?v=ef3a0cfb:3733:39)
+    at invokeGuardedCallbackAndCatchFirstError (chunk-W6L2VRDA.js?v=ef3a0cfb:3736:33)
+    at executeDispatch (chunk-W6L2VRDA.js?v=ef3a0cfb:7014:11)
+    at processDispatchQueueItemsInOrder (chunk-W6L2VRDA.js?v=ef3a0cfb:7034:15)
+    at processDispatchQueue (chunk-W6L2VRDA.js?v=ef3a0cfb:7043:13)
+window.fetch @ Network.js:219
+apply @ injected.js:253
+handleSubmit @ LoginForm.tsx:29
+callCallback2 @ chunk-W6L2VRDA.js?v=ef3a0cfb:3674
+invokeGuardedCallbackDev @ chunk-W6L2VRDA.js?v=ef3a0cfb:3699
+invokeGuardedCallback @ chunk-W6L2VRDA.js?v=ef3a0cfb:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-W6L2VRDA.js?v=ef3a0cfb:3736
+executeDispatch @ chunk-W6L2VRDA.js?v=ef3a0cfb:7014
+processDispatchQueueItemsInOrder @ chunk-W6L2VRDA.js?v=ef3a0cfb:7034
+processDispatchQueue @ chunk-W6L2VRDA.js?v=ef3a0cfb:7043
+dispatchEventsForPlugins @ chunk-W6L2VRDA.js?v=ef3a0cfb:7051
+(anonymous) @ chunk-W6L2VRDA.js?v=ef3a0cfb:7174
+batchedUpdates$1 @ chunk-W6L2VRDA.js?v=ef3a0cfb:18913
+batchedUpdates @ chunk-W6L2VRDA.js?v=ef3a0cfb:3579
+dispatchEventForPluginEventSystem @ chunk-W6L2VRDA.js?v=ef3a0cfb:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-W6L2VRDA.js?v=ef3a0cfb:5478
+dispatchEvent @ chunk-W6L2VRDA.js?v=ef3a0cfb:5472
+dispatchDiscreteEvent @ chunk-W6L2VRDA.js?v=ef3a0cfb:5449

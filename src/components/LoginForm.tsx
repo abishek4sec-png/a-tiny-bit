@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { supabase } from '../lib/supabase';
 
 interface LoginFormProps {
   onLogin: (username: string) => void;
@@ -19,42 +18,60 @@ export default function LoginForm({ onLogin, isSignUp, onToggleMode }: LoginForm
     setLoading(true);
 
     try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      
       if (isSignUp) {
-        // Sign up - insert new user
-        const { data, error } = await supabase
-          .from('users')
-          .insert([{ username, password }])
-          .select();
+        // Sign up - insert new user using direct API call
+        const response = await fetch(`${supabaseUrl}/rest/v1/users`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify({ username, password })
+        });
 
-        if (error) {
-          console.error('Supabase signup error:', error);
-          if (error.code === '23505') {
+        if (!response.ok) {
+          const errorData = await response.text();
+          console.error('Signup error:', errorData);
+          if (response.status === 409) {
             setError('Username already exists');
           } else {
-            setError(`Failed to create account: ${error.message}`);
+            setError('Failed to create account');
           }
           return;
         }
 
+        const data = await response.json();
         if (data && data.length > 0) {
           onLogin(username);
         }
       } else {
-        // Login - check credentials
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('username', username)
-          .eq('password', password)
-          .single();
+        // Login - check credentials using direct API call
+        const response = await fetch(`${supabaseUrl}/rest/v1/users?username=eq.${encodeURIComponent(username)}&password=eq.${encodeURIComponent(password)}`, {
+          method: 'GET',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-        if (error || !data) {
-          console.error('Supabase login error:', error);
+        if (!response.ok) {
+          console.error('Login error:', response.status);
           setError('Invalid username or password');
           return;
         }
 
-        onLogin(username);
+        const data = await response.json();
+        if (data && data.length > 0) {
+          onLogin(username);
+        } else {
+          setError('Invalid username or password');
+        }
       }
     } catch (err) {
       console.error('Unexpected error:', err);

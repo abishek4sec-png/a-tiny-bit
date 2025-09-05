@@ -27,10 +27,11 @@ export default function LoginForm({ onLogin, isSignUp, onToggleMode }: LoginForm
           .select();
 
         if (error) {
+          console.error('Supabase signup error:', error);
           if (error.code === '23505') {
             setError('Username already exists');
           } else {
-            setError('Failed to create account');
+            setError(`Failed to create account: ${error.message}`);
           }
           return;
         }
@@ -48,6 +49,7 @@ export default function LoginForm({ onLogin, isSignUp, onToggleMode }: LoginForm
           .single();
 
         if (error || !data) {
+          console.error('Supabase login error:', error);
           setError('Invalid username or password');
           return;
         }
@@ -55,6 +57,7 @@ export default function LoginForm({ onLogin, isSignUp, onToggleMode }: LoginForm
         onLogin(username);
       }
     } catch (err) {
+      console.error('Unexpected error:', err);
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);

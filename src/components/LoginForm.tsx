@@ -18,22 +18,9 @@ export default function LoginForm({ onLogin, isSignUp, onToggleMode }: LoginForm
     setError('');
     setLoading(true);
 
-    // Debug: Check if Supabase is properly configured
-    console.log('Supabase URL exists:', !!import.meta.env.VITE_SUPABASE_URL);
-    console.log('Supabase Key exists:', !!import.meta.env.VITE_SUPABASE_ANON_KEY);
-
     try {
-      // Test the connection first
-      const { data: testData, error: testError } = await supabase
-        .from('users')
-        .select('count(*)')
-        .limit(1);
-      
-      console.log('Connection test result:', { testData, testError });
-
       if (isSignUp) {
         // Sign up - insert new user
-        console.log('Attempting to insert user:', { username, password: '***' });
         const { data, error } = await supabase
           .from('users')
           .insert([{ username, password }])

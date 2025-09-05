@@ -1,154 +1,121 @@
 import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Wallet } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
-interface LoginFormProps {
-  onLogin: (username: string) => void;
-  isSignUp: boolean;
-  onToggleMode: () => void;
-}
-
-export default function LoginForm({ onLogin, isSignUp, onToggleMode }: LoginFormProps) {
-  const [username, setUsername] = useState('');
+export default function LoginForm() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-      
-      
       if (isSignUp) {
-        // Sign up - insert new user using direct API call (v2)
-        const response = await fetch(`${supabaseUrl}/rest/v1/users`, {
-          method: 'POST',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-          },
-          body: JSON.stringify({ username, password })
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
         });
-
-        if (!response.ok) {
-          const errorData = await response.text();
-          console.error('Signup error:', errorData);
-          if (response.status === 409) {
-            setError('Username already exists');
-          } else {
-            setError('Failed to create account');
-          }
-          return;
-        }
-
-        const data = await response.json();
-        if (data && data.length > 0) {
-          onLogin(username);
-        }
+        
+        if (error) throw error;
+        
+        toast({
+          title: "Account created!",
+          description: "Please check your email to verify your account.",
+        });
       } else {
-        // Login - check credentials using direct API call
-        const response = await fetch(`${supabaseUrl}/rest/v1/users?username=eq.${encodeURIComponent(username)}&password=eq.${encodeURIComponent(password)}`, {
-          method: 'GET',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-            'Content-Type': 'application/json'
-          }
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
         });
-
-        if (!response.ok) {
-          console.error('Login error:', response.status);
-          setError('Invalid username or password');
-          return;
-        }
-
-        const data = await response.json();
-        if (data && data.length > 0) {
-          onLogin(username);
-        } else {
-          setError('Invalid username or password');
-        }
+        
+        if (error) throw error;
+        
+        toast({
+          title: "Welcome back!",
+          description: "You've been successfully signed in.",
+        });
       }
-    } catch (err) {
-      console.error('Unexpected error:', err);
-      setError('An unexpected error occurred');
+    } catch (error: any) {
+      toast({
+        title: "Authentication failed",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {isSignUp ? 'Create your account' : 'Sign in to your account'}
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/20 to-primary/5 p-4">
+      <Card className="w-full max-w-md expense-card">
+        <CardHeader className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-primary via-primary-glow to-accent shadow-lg">
+              <Wallet className="h-8 w-8 text-primary-foreground" />
+            </div>
+            <h1 className="text-2xl font-black gradient-text">
+              Expense Tracker
+            </h1>
+          </div>
+          <CardTitle className="text-2xl">
+            {isSignUp ? 'Create Account' : 'Welcome Back'}
+          </CardTitle>
+          <CardDescription>
+            {isSignUp 
+              ? 'Start tracking your expenses today' 
+              : 'Sign in to view your expense dashboard'
+            }
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
+            <div className="space-y-2">
+              <Input
                 type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
-          </div>
-
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
-          )}
-
-          <div>
-            <button
-              type="submit"
+            <Button 
+              type="submit" 
+              className="w-full" 
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
-              {loading ? 'Please wait...' : (isSignUp ? 'Sign Up' : 'Sign In')}
-            </button>
-          </div>
-
-          <div className="text-center">
-            <button
+              {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : 'Sign In')}
+            </Button>
+            <Button
               type="button"
-              onClick={onToggleMode}
-              className="text-indigo-600 hover:text-indigo-500"
+              variant="ghost"
+              className="w-full"
+              onClick={() => setIsSignUp(!isSignUp)}
             >
-              {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
-            </button>
-          </div>
-        </form>
-      </div>
+              {isSignUp 
+                ? 'Already have an account? Sign In' 
+                : "Don't have an account? Sign Up"
+              }
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

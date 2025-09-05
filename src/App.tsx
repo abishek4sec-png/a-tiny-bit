@@ -1,29 +1,35 @@
-import { useState } from "react";
-import LoginForm from "./components/LoginForm";
-import Dashboard from "./components/Dashboard";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from '@/components/AuthProvider';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { useAuth } from '@/hooks/useAuth';
+import Index from '@/pages/Index';
+import LoginForm from '@/components/LoginForm';
+import { Toaster } from '@/components/ui/toaster';
 
-function App() {
-  const [user, setUser] = useState<{ username: string } | null>(null);
-  const [isSignUp, setIsSignUp] = useState(false);
+function AppContent() {
+  const { user } = useAuth();
 
-  const handleLogin = (username: string) => {
-    setUser({ username });
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-  };
-
-  if (user) {
-    return <Dashboard user={user} onLogout={handleLogout} />;
+  if (!user) {
+    return <LoginForm />;
   }
 
   return (
-    <LoginForm 
-      onLogin={handleLogin}
-      isSignUp={isSignUp}
-      onToggleMode={() => setIsSignUp(!isSignUp)}
-    />
+    <ProtectedRoute>
+      <Index />
+    </ProtectedRoute>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="*" element={<AppContent />} />
+        </Routes>
+        <Toaster />
+      </Router>
+    </AuthProvider>
   );
 }
 

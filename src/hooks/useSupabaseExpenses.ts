@@ -1,23 +1,26 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase, DatabaseExpense } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import type { Tables } from '@/integrations/supabase/types';
 import { Expense, ExpenseCategory, ExpenseSummary } from '@/types/expense';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
+
+type DatabaseExpense = Tables<'expenses'>;
 
 export const useSupabaseExpenses = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
-  // Convert database expense to app expense format
-  const convertDbExpenseToExpense = (dbExpense: DatabaseExpense): Expense => ({
-    id: dbExpense.id,
-    amount: Number(dbExpense.amount),
-    category: dbExpense.category as ExpenseCategory,
-    description: dbExpense.description,
-    date: dbExpense.date,
-    createdAt: dbExpense.created_at,
-  });
+// Convert database expense to app expense format
+const convertDbExpenseToExpense = (dbExpense: DatabaseExpense): Expense => ({
+  id: dbExpense.id,
+  amount: Number(dbExpense.amount),
+  category: dbExpense.category as ExpenseCategory,
+  description: dbExpense.description,
+  date: dbExpense.date,
+  createdAt: dbExpense.created_at,
+});
 
   // Load expenses from Supabase
   const loadExpenses = useCallback(async () => {

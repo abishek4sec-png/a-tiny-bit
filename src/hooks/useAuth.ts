@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { User, AuthError } from '@supabase/supabase-js';
-import { supabase, UserProfile } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import type { Tables } from '@/integrations/supabase/types';
 import { toast } from '@/hooks/use-toast';
 
 interface AuthContextType {
@@ -11,6 +12,8 @@ interface AuthContextType {
   signUp: (username: string, password: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
 }
+
+type UserProfile = Tables<'user_profiles'>;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
